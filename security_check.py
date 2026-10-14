@@ -1,4 +1,5 @@
 import json
+import requests
 THRESHOLD = 2 #flag any IP with this many failed logins or more
 failed_logins = 0
 failed_by_ip = {} #dictionary: IP address -> number of failed logins
@@ -42,5 +43,13 @@ with open("report.json", "w") as f:
 
 print("Report saved to report.json")
 
+# Send a Discord alert if any IPs were flagged
+if flagged_ips:
+    with open("discord_webhook.txt", "r") as f:
+        webhook_url = f.read().strip()
+
+    message = f"🚨 Security Alert: {len(flagged_ips)} suspicious IP(s) found: {', '.join(flagged_ips)}"
+    response = requests.post(webhook_url, json={"content": message})
+    print("Discord alert status:", response.status_code)
 
 print("Checkmate!")
