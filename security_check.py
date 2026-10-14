@@ -1,3 +1,4 @@
+import json
 THRESHOLD = 2 #flag any IP with this many failed logins or more
 failed_logins = 0
 failed_by_ip = {} #dictionary: IP address -> number of failed logins
@@ -27,4 +28,19 @@ for ip, count in failed_by_ip.items():
         print(f" [ALERT] {ip}: {count} failed logins")
 if not flagged_ips:
     print(" None found")
+
+#save everything we found to a JSON file
+report = {
+    "total_failed_logins": failed_logins,
+    "threshold": THRESHOLD,
+    "failed_by_ip": failed_by_ip,
+    "flagged_ips": flagged_ips
+}
+
+with open("report.json", "w") as f:
+    json.dump(report, f, indent=4)
+
+print("Report saved to report.json")
+
+
 print("Checkmate!")
