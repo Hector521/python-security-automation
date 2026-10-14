@@ -1,3 +1,4 @@
+THRESHOLD = 2 #flag any IP with this many failed logins or more
 failed_logins = 0
 failed_by_ip = {} #dictionary: IP address -> number of failed logins
 
@@ -17,4 +18,13 @@ print("Failed login attempts:", failed_logins)
 print("Failed logins by IP:")
 for ip, count in failed_by_ip.items():
     print(f" {ip}: {count}")
+
+flagged_ips = [] # list of IPs that crossed the threshold
+print(f"Suspicious IPs ({THRESHOLD}+ failed logins):")
+for ip, count in failed_by_ip.items():
+    if count >= THRESHOLD:
+        flagged_ips.append(ip)
+        print(f" [ALERT] {ip}: {count} failed logins")
+if not flagged_ips:
+    print(" None found")
 print("Checkmate!")
